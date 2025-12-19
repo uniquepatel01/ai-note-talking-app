@@ -29,6 +29,7 @@ interface NoteEditorProps {
   onAIImprove?: (text: string) => void;
   onAITags?: (text: string) => void;
   isLoading?: boolean;
+  aiLoading?: boolean;
 }
 
 export function NoteEditor({
@@ -38,9 +39,11 @@ export function NoteEditor({
   onAIImprove,
   onAITags,
   isLoading = false,
+  aiLoading = false,
 }: NoteEditorProps) {
   const [tags, setTags] = useState<string[]>(initialData?.tags || []);
   const [tagInput, setTagInput] = useState("");
+  const aiBusy = !!aiLoading;
 
   const {
     register,
@@ -100,18 +103,18 @@ export function NoteEditor({
                 size="sm"
                 variant="outline"
                 onClick={() => onAISummary(content)}
-                disabled={!content || content.length < 10}
+                disabled={!content || content.length < 10 || aiBusy}
               >
-                AI Summary
+                {aiBusy ? "Thinking..." : "AI Summary"}
               </Button>
               <Button
                 type="button"
                 size="sm"
                 variant="outline"
                 onClick={() => onAIImprove(content)}
-                disabled={!content || content.length < 10}
+                disabled={!content || content.length < 10 || aiBusy}
               >
-                AI Improve
+                {aiBusy ? "Thinking..." : "AI Improve"}
               </Button>
             </div>
           )}
@@ -136,9 +139,9 @@ export function NoteEditor({
               size="sm"
               variant="outline"
               onClick={() => onAITags(content)}
-              disabled={!content || content.length < 10}
+              disabled={!content || content.length < 10 || aiBusy}
             >
-              Generate Tags
+              {aiBusy ? "Generating..." : "Generate Tags"}
             </Button>
           )}
         </div>

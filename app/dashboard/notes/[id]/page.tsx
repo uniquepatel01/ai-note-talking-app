@@ -17,6 +17,7 @@ export default function EditNotePage({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [aiLoading, setAiLoading] = useState(false);
   const [note, setNote] = useState<{
     title: string;
     content: string;
@@ -77,6 +78,7 @@ export default function EditNotePage({
   };
 
   const handleAISummary = async (text: string) => {
+    setAiLoading(true);
     try {
       const response = await fetch("/api/ai/summary", {
         method: "POST",
@@ -89,13 +91,19 @@ export default function EditNotePage({
       const data = await response.json();
       if (response.ok) {
         alert(`Summary:\n\n${data.summary}`);
+      } else {
+        alert(`AI Summary failed: ${data?.message || response.statusText}`);
       }
     } catch (error) {
       console.error("Failed to generate summary:", error);
+      alert("An error occurred while generating summary");
+    } finally {
+      setAiLoading(false);
     }
   };
 
   const handleAIImprove = async (text: string) => {
+    setAiLoading(true);
     try {
       const response = await fetch("/api/ai/improve", {
         method: "POST",
@@ -108,13 +116,19 @@ export default function EditNotePage({
       const data = await response.json();
       if (response.ok) {
         alert(`Improved Text:\n\n${data.improvedText}`);
+      } else {
+        alert(`AI Improve failed: ${data?.message || response.statusText}`);
       }
     } catch (error) {
       console.error("Failed to improve text:", error);
+      alert("An error occurred while improving text");
+    } finally {
+      setAiLoading(false);
     }
   };
 
   const handleAITags = async (text: string) => {
+    setAiLoading(true);
     try {
       const response = await fetch("/api/ai/tags", {
         method: "POST",
@@ -127,9 +141,14 @@ export default function EditNotePage({
       const data = await response.json();
       if (response.ok) {
         alert(`Suggested Tags:\n\n${data.tags.join(", ")}`);
+      } else {
+        alert(`AI Tags failed: ${data?.message || response.statusText}`);
       }
     } catch (error) {
       console.error("Failed to generate tags:", error);
+      alert("An error occurred while generating tags");
+    } finally {
+      setAiLoading(false);
     }
   };
 
@@ -166,6 +185,7 @@ export default function EditNotePage({
             onAIImprove={handleAIImprove}
             onAITags={handleAITags}
             isLoading={isLoading}
+            aiLoading={aiLoading}
           />
         </CardContent>
       </Card>

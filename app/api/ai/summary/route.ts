@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { generateSummary } from "@/lib/ai";
 import { z } from "zod";
+export const runtime = "nodejs";
 
 const summarySchema = z.object({
   text: z.string().min(10, "Text must be at least 10 characters long"),

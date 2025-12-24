@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+.DEPLOYMENT.md 
+.README.md 
+
 
 # testing
 /coverage
